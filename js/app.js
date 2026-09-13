@@ -8,6 +8,11 @@
   const E = window.MG_ENGINE;
   const $ = id => document.getElementById(id);
 
+  /* Короткие формы названий — для строки контекста и подписи к графику. */
+  const LEVEL_WORD = { low: 'низкий', mid: 'средний', high: 'высокий' };
+  const DISC_WORD = { calm: 'спокойный', work: 'рабочий', loud: 'шумный' };
+  const DISC_GEN = { calm: 'спокойного, пассивного класса', work: 'рабочего класса', loud: 'шумного класса' };
+
   let DB = null;
   let lastCtx = null;
   let lastResult = null;
@@ -134,12 +139,9 @@
     const ctx = lastCtx;
     const v = currentVariant();
 
-    const levelLabel = DB.LEVELS.find(l => l.id === ctx.level).label.split('—')[0].trim().toLowerCase();
-    const discLabel = DB.DISCIPLINE.find(d => d.id === ctx.discipline).label.split('—')[0].trim().toLowerCase();
-
     $('context-line').innerHTML =
       `<b>${ctx.grade} класс</b> · <b>${esc(ctx.topic.title)}</b> · ${ctx.sizeLabel} · ` +
-      `уровень ${levelLabel} · класс ${discLabel}<br>` +
+      `уровень ${LEVEL_WORD[ctx.level] || ctx.level} · класс ${DISC_WORD[ctx.discipline] || ctx.discipline}<br>` +
       ctx.topic.tags.map(t => `<span class="tag">${esc(t)}</span>`).join('');
 
     drawRhythm(v, ctx);
@@ -184,10 +186,12 @@
     const parts = [];
 
     for (let e = 1; e <= 5; e++) {
-      parts.push(`<line class="rh-grid" x1="70" y1="${y(e)}" x2="575" y2="${y(e)}" opacity="${e === 1 ? .9 : .5}"/>`);
+      parts.push(`<line class="rh-grid" x1="70" y1="${y(e)}" x2="540" y2="${y(e)}" opacity="${e === 1 ? .9 : .5}"/>`);
       parts.push(`<text class="rh-ax" x="58" y="${y(e) + 4}" text-anchor="end">${e}</text>`);
     }
-    parts.push(`<text class="rh-ax" x="58" y="${y(5) - 14}" text-anchor="end">динамика</text>`);
+    // Подписи у краёв шкалы объясняют, что означают цифры.
+    parts.push(`<text class="rh-ax" x="552" y="${y(5) + 4}">шумно</text>`);
+    parts.push(`<text class="rh-ax" x="552" y="${y(1) + 4}">тихо</text>`);
 
     const tgt = E.PHASES.map((ph, i) => `${xs[i]},${y(ctx.target[ph])}`).join(' ');
     parts.push(`<polyline class="rh-target" points="${tgt}"/>`);
@@ -208,13 +212,19 @@
 
     $('rhythm').innerHTML = parts.join('');
 
-    const t = E.PHASES.map(ph => ctx.target[ph]).join(' → ');
-    const a = variant.steps.map(s => s.tech.energy).join(' → ');
-    const disc = DB.DISCIPLINE.find(d => d.id === ctx.discipline).label.split('—')[0].trim().toLowerCase();
+    const tArr = E.PHASES.map(ph => ctx.target[ph]);
+    const aArr = variant.steps.map(s => s.tech.energy);
+    const hit = tArr.every((v, i) => v === aArr[i]);
+    const gen = DISC_GEN[ctx.discipline] || 'этого класса';
+
     $('rhythm-note').innerHTML =
-      `Сплошная линия — динамика подобранных приёмов (${a}), пунктир — целевой профиль ` +
-      `для класса «${esc(disc)}» (${t}). Соседние приёмы обязаны различаться по динамике: ` +
-      `урок не идёт на одной ноте.`;
+      `Шкала слева — насколько приём поднимает класс: 1 — тихая работа за партой, ` +
+      `5 — движение и соревнование. Кольца показывают цель для ${esc(gen)} — ` +
+      `<b>${tArr.join(' → ')}</b>: спокойный вход, активная середина, тихая концовка. ` +
+      `Сплошная линия — что подобралось: <b>${aArr.join(' → ')}</b>. ` +
+      (hit
+        ? 'Кольца надеты на точки — алгоритм попал в цель точно.'
+        : 'Расхождение значит, что приёма нужной динамики под эту тему не нашлось.');
   }
 
   /* ---------- граф ---------- */
