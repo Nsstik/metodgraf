@@ -2,7 +2,7 @@
    МетодГраф — слой данных.
 
    Один интерфейс, два источника:
-     • Supabase (REST) — если в js/config.js заданы URL и anon-ключ;
+     • Supabase (REST) — если в js/config.js заданы URL и публичный ключ;
      • локальный js/data.js — если нет или если запрос не удался.
 
    Библиотека supabase-js не нужна: используется обычный REST-эндпоинт PostgREST.
@@ -14,12 +14,22 @@
   const cfg = () => (global.MG_CONFIG || {});
   const configured = () => !!(cfg().SUPABASE_URL && cfg().SUPABASE_ANON_KEY);
 
+  /* Заголовки запроса.
+     Новые публичные ключи Supabase (sb_publishable_…) не являются JWT, и слать
+     их в Authorization: Bearer нельзя — проверка подписи падает. Устаревшие
+     ключи anon (строка на eyJ…) — наоборот, обычные JWT, и их принято слать
+     в обоих заголовках. Поэтому определяем вид ключа по его началу. */
+  function authHeaders() {
+    const key = cfg().SUPABASE_ANON_KEY || '';
+    const h = { apikey: key };
+    if (key.startsWith('eyJ')) h.Authorization = `Bearer ${key}`;
+    return h;
+  }
+
   async function sbSelect(table, query) {
-    const { SUPABASE_URL, SUPABASE_ANON_KEY } = cfg();
+    const { SUPABASE_URL } = cfg();
     const url = `${SUPABASE_URL.replace(/\/$/, '')}/rest/v1/${table}?${query || 'select=*'}`;
-    const res = await fetch(url, {
-      headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` }
-    });
+    const res = await fetch(url, { headers: authHeaders() });
     if (!res.ok) throw new Error(`${table}: HTTP ${res.status}`);
     return res.json();
   }
@@ -51,7 +61,7 @@
         sbSelect('techniques', 'select=*&order=id'),
         sbSelect('technique_links', 'select=*')
       ]);
-      if (!topics.length || !techniques.length) throw new Error('таблицы пустые — выполните seed.sql');
+      if (!topics.length || !techniques.length) throw new Error('таблицы пустые — выполните setup.sql');
       return { source: 'supabase', note: 'данные из Supabase', db: fromRows(topics, techniques, links) };
     } catch (e) {
       console.warn('[МетодГраф] Supabase недоступен, работаем на локальных данных:', e.message);
@@ -63,16 +73,14 @@
      параметров учителя встречаются чаще всего и какие приёмы система выдаёт. */
   async function logRequest(ctx, picked) {
     if (!configured() || cfg().LOG_REQUESTS === false) return;
-    const { SUPABASE_URL, SUPABASE_ANON_KEY } = cfg();
+    const { SUPABASE_URL } = cfg();
     try {
       await fetch(`${SUPABASE_URL.replace(/\/$/, '')}/rest/v1/lesson_requests`, {
         method: 'POST',
-        headers: {
-          apikey: SUPABASE_ANON_KEY,
-          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+        headers: Object.assign(authHeaders(), {
           'Content-Type': 'application/json',
           Prefer: 'return=minimal'
-        },
+        }),
         body: JSON.stringify({
           grade: ctx.grade, topic_id: ctx.topic.id, size_id: ctx.sizeId,
           level: ctx.level, discipline: ctx.discipline, picked
