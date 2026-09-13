@@ -1,18 +1,17 @@
 /* ============================================================================
    Настройки подключения к Supabase.
 
-   Пока эти поля пустые — прототип работает на локальных данных из js/data.js
-   (сайт полностью функционален, ничего настраивать не нужно).
+   Ключ публичный — он специально предназначен для открытого кода. Доступ к
+   данным ограничен политиками row level security из supabase/schema.sql:
+   справочники доступны только на чтение, лог запросов — только на запись.
 
-   Чтобы перевести его на Supabase:
-     1. Создайте проект на supabase.com
-     2. SQL Editor → выполните supabase/schema.sql, затем supabase/seed.sql
-     3. Settings → API → скопируйте Project URL и ключ anon public сюда
+   Если ключи убрать или база не ответит, сайт автоматически переключится
+   на локальные данные из js/data.js и продолжит работать.
    ============================================================================ */
 
 window.MG_CONFIG = {
-  SUPABASE_URL: '',          // например: 'https://abcdefgh.supabase.co'
-  SUPABASE_ANON_KEY: '',     // ключ anon public (он публичный, его можно держать в репозитории)
+  SUPABASE_URL: 'https://npjtiepwnngqyaubdjnc.supabase.co',
+  SUPABASE_ANON_KEY: 'sb_publishable_rS01aoVDOrQ1MfnFB2KRHg_YMLczE1z',
 
   // Писать ли обезличенную статистику запросов в таблицу lesson_requests
   LOG_REQUESTS: true
