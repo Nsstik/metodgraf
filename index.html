@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>МетодГраф</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&family=Golos+Text:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+        <line x1="7" y1="9" x2="16" y2="22"/><line x1="16" y1="22" x2="25" y2="10"/>
+        <line x1="7" y1="9" x2="25" y2="10" class="faint"/>
+        <circle cx="7" cy="9" r="3.2"/><circle cx="16" cy="22" r="4.2"/><circle cx="25" cy="10" r="2.6"/>
+      </svg>
+      <span>Метод<b>Граф</b></span>
+    </div>
+    <p class="tagline">Три приёма на урок математики — подобранные под класс, тему и настроение</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ШАГ 1. Опрос учителя -->
+  <section class="card-panel" id="form-panel">
+    <h2 class="step"><span>1</span> Расскажите про урок</h2>
+
+    <form id="survey" class="grid">
+      <label class="field">
+        <span class="label">Класс</span>
+        <select id="f-grade" required></select>
+      </label>
+
+      <label class="field">
+        <span class="label">Тема урока</span>
+        <select id="f-topic" required disabled></select>
+        <span class="hint" id="topic-hint">Сначала выберите класс</span>
+      </label>
+
+      <label class="field">
+        <span class="label">Сколько учеников</span>
+        <select id="f-size" required></select>
+      </label>
+
+      <label class="field">
+        <span class="label">Уровень подготовки</span>
+        <select id="f-level" required></select>
+      </label>
+
+      <label class="field field-wide">
+        <span class="label">Как класс себя ведёт</span>
+        <select id="f-discipline" required></select>
+      </label>
+
+      <div class="actions">
+        <button type="submit" class="btn">Подобрать приёмы</button>
+        <button type="button" class="btn ghost" id="btn-random">Случайный пример</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- ШАГ 2. Сценарий -->
+  <section id="result-panel">
+    <h2 class="step"><span>2</span> Сценарий урока</h2>
+
+    <p class="context" id="context-line"></p>
+
+    <figure class="rhythm">
+      <svg id="rhythm" viewBox="0 0 620 150" role="img" aria-label="Ритм урока"></svg>
+      <figcaption id="rhythm-note"></figcaption>
+    </figure>
+
+    <ol class="route" id="cards"></ol>
+
+    <div class="result-actions">
+      <button type="button" class="btn ghost" id="btn-alt">Показать другой вариант</button>
+      <button type="button" class="btn ghost" id="btn-print">Распечатать</button>
+    </div>
+  </section>
+
+  <!-- ШАГ 3. Граф -->
+  <section class="inset" id="graph-panel">
+    <h2 class="step"><span>3</span> Почему именно эти приёмы</h2>
+    <p class="muted">
+      Вершины — приёмы, прошедшие отбор по размеру класса и уровню подготовки.
+      Размер точки — динамика приёма. Светлые линии — связи сочетаемости
+      (пунктирные означают конфликт), жирная линия — выбранный путь урока.
+    </p>
+    <div class="graph-box"><svg id="graph" viewBox="0 0 790 470" role="img" aria-label="Граф приёмов"></svg></div>
+  </section>
+
+  <!-- Методическая справка -->
+  <section class="inset">
+    <details id="method">
+      <summary><h2 class="step inline"><span>?</span> Как устроен алгоритм</h2></summary>
+      <div class="method-body">
+        <h3>Теги</h3>
+        <p>
+          Каждая тема помечена тем, чего она требует от ученика — <i>вычисления, алгоритм,
+          формула, понятие, абстракция, геометрия, график, доказательство, текстовая задача,
+          ошибкоопасная, практика</i>. Приёмы помечены тем же словарём: так тема и приём
+          оказываются в одном пространстве признаков.
+        </p>
+
+        <h3>Граф</h3>
+        <p>
+          Приёмы — вершины. Рёбра двух видов: <b>тематические</b> возникают автоматически,
+          когда теги приёма пересекаются с тегами темы; <b>сценарные</b> заданы экспертно и
+          описывают сочетаемость — какие приёмы усиливают друг друга, а какие конфликтуют
+          (две шумные активности подряд, две диагностики подряд, содержательное дублирование).
+        </p>
+
+        <h3>Отбор кандидатов</h3>
+        <p>
+          Из графа убираются приёмы, не работающие в нужной части урока, не рассчитанные
+          на такую численность или на такой уровень подготовки. Для класса с трудной
+          дисциплиной дополнительно исключаются приёмы максимальной динамики.
+        </p>
+
+        <h3>Профиль динамики</h3>
+        <p>
+          Поведение класса задаёт базовый уровень: шумный — 2, рабочий — 3, спокойный
+          и пассивный — 4. Профиль урока строится как <b>[база, база + 1, база − 1]</b>:
+          середина — самая активная часть, концовка всегда спокойнее начала. Для «бушующего»
+          класса это 2 → 3 → 1, для пассивного 4 → 5 → 3.
+        </p>
+
+        <h3>Поиск пути</h3>
+        <p>
+          Перебираются все тройки «начало — середина — конец». Тройка отбрасывается, если
+          приёмы повторяются или если соседние не различаются по динамике хотя бы на
+          единицу — это и есть требование чередования. Вес пути:
+        </p>
+        <p class="formula">
+          W = Σ (4·F-мера совпадения тегов + 3·близость к целевой динамике
+          + 1·посадка по численности − риск) + Σ вес сценарных рёбер + премия за контраст
+        </p>
+        <p>Выдаётся путь наибольшего веса; ближайшие непохожие пути предлагаются как альтернативы.</p>
+
+        <h3>Границы прототипа</h3>
+        <p>
+          Демонстрационная модель: 37 тем (5–6 на класс) и 30 приёмов. Веса коэффициентов
+          заданы экспертно и не откалиброваны на эмпирических данных — их калибровка по
+          обратной связи учителей и есть содержание дальнейшей работы.
+        </p>
+      </div>
+    </details>
+  </section>
+
+</main>
+
+<footer class="wrap foot">
+  <span id="src-note">…</span>
+  <span id="stat-line"></span>
+</footer>
+
+<script src="js/config.js"></script>
+<script src="js/data.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/store.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,348 @@
+/* ============================================================================
+   МетодГраф — оформление
+
+   Палитра: тёплая бумага, глубокий зелёно-бирюзовый как основной цвет
+   действия, охра — для шкалы динамики (чем «горячее» приём, тем теплее метка).
+   Шрифты: Nunito — заголовки и названия приёмов, Golos Text — весь остальной
+   текст и интерфейс.
+   ============================================================================ */
+
+:root{
+  --paper:#F6F2EA;
+  --surface:#FFFFFF;
+  --surface-2:#FCF9F4;
+  --ink:#221E19;
+  --ink-2:#6B6157;
+  --ink-3:#9B9084;
+  --line:#E7DFD2;
+  --line-2:#F0E9DE;
+  --accent:#0F6157;
+  --accent-2:#12796B;
+  --accent-soft:#E2EFEB;
+  --on-accent:#FFFFFF;
+  --warm:#C07514;
+  --warm-soft:#FAEDD8;
+  --shadow-s:0 1px 2px rgba(70,52,32,.06);
+  --shadow-m:0 1px 2px rgba(70,52,32,.05), 0 10px 26px -14px rgba(70,52,32,.30);
+  --display:"Nunito",ui-rounded,"Segoe UI",system-ui,sans-serif;
+  --text:"Golos Text",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
+  --r-s:10px;
+  --r-m:16px;
+  --r-l:22px;
+}
+
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#191512;
+    --surface:#231E19;
+    --surface-2:#1E1A16;
+    --ink:#F3EEE6;
+    --ink-2:#B6AB9E;
+    --ink-3:#897E71;
+    --line:#342C25;
+    --line-2:#2A231E;
+    --accent:#4FBBA7;
+    --accent-2:#6BD2BE;
+    --accent-soft:#1C3A34;
+    --on-accent:#10211E;
+    --warm:#E4A33E;
+    --warm-soft:#3A2C14;
+    --shadow-s:0 1px 2px rgba(0,0,0,.35);
+    --shadow-m:0 1px 2px rgba(0,0,0,.3), 0 10px 26px -14px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#191512;
+  --surface:#231E19;
+  --surface-2:#1E1A16;
+  --ink:#F3EEE6;
+  --ink-2:#B6AB9E;
+  --ink-3:#897E71;
+  --line:#342C25;
+  --line-2:#2A231E;
+  --accent:#4FBBA7;
+  --accent-2:#6BD2BE;
+  --accent-soft:#1C3A34;
+  --on-accent:#10211E;
+  --warm:#E4A33E;
+  --warm-soft:#3A2C14;
+  --shadow-s:0 1px 2px rgba(0,0,0,.35);
+  --shadow-m:0 1px 2px rgba(0,0,0,.3), 0 10px 26px -14px rgba(0,0,0,.7);
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font:16px/1.62 var(--text);
+  -webkit-font-smoothing:antialiased;
+}
+
+.wrap{max-width:820px;margin:0 auto;padding-inline:22px}
+.hidden{display:none !important}
+.muted{color:var(--ink-2);font-size:14px;margin:0 0 6px;max-width:62ch}
+
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+
+/* ---------- шапка ---------- */
+.top{padding-block:38px 30px}
+.brand{
+  display:flex;align-items:center;gap:12px;
+  font-family:var(--display);font-weight:800;font-size:27px;letter-spacing:-.4px;
+}
+.brand b{font-weight:800;color:var(--accent)}
+.mark{width:34px;height:34px;flex:none}
+.mark line{stroke:var(--accent);stroke-width:2;stroke-linecap:round}
+.mark line.faint{stroke:var(--ink-3);stroke-dasharray:3 3;opacity:.55}
+.mark circle{fill:var(--accent)}
+.tagline{margin:10px 0 0 46px;color:var(--ink-2);font-size:15.5px;max-width:52ch}
+
+/* ---------- крупная белая карточка формы ---------- */
+.card-panel{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--r-l);
+  box-shadow:var(--shadow-m);
+  padding:28px 28px 30px;
+}
+
+/* ---------- утопленные блоки (граф, справка) ---------- */
+.inset{
+  background:var(--surface-2);
+  border:1px solid var(--line-2);
+  border-radius:var(--r-m);
+  padding:24px 26px 26px;
+  margin-top:34px;
+}
+
+section#result-panel{margin-top:44px}
+
+/* ---------- нумерация шагов ---------- */
+.step{
+  display:flex;align-items:center;gap:11px;
+  margin:0 0 22px;
+  font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:-.2px;
+}
+.step.inline{margin:0}
+.step span{
+  display:grid;place-items:center;
+  width:27px;height:27px;flex:none;border-radius:50%;
+  background:var(--accent);color:var(--on-accent);
+  font-size:14px;font-weight:700;
+}
+
+/* ---------- форма ---------- */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px 20px}
+.field{display:flex;flex-direction:column;gap:7px;min-width:0}
+.field-wide{grid-column:1 / -1}
+.label{font-size:13.5px;font-weight:500;color:var(--ink-2)}
+.hint{font-size:12.5px;color:var(--ink-3)}
+
+select{
+  appearance:none;width:100%;
+  padding:13px 38px 13px 15px;
+  border:1.5px solid var(--line);
+  border-radius:var(--r-s);
+  background:var(--surface-2);
+  color:var(--ink);
+  font:inherit;font-size:15.5px;
+  cursor:pointer;
+  transition:border-color .15s, background-color .15s;
+}
+select:hover:enabled{border-color:var(--ink-3)}
+select:focus{outline:none;border-color:var(--accent);background:var(--surface)}
+select:disabled{color:var(--ink-3);cursor:not-allowed;opacity:.7}
+
+.field{position:relative}
+.field::after{
+  content:"";position:absolute;right:15px;top:41px;
+  width:9px;height:9px;pointer-events:none;
+  border-right:2px solid var(--ink-3);border-bottom:2px solid var(--ink-3);
+  transform:rotate(45deg) translateY(-2px);border-radius:1px;
+}
+
+.actions,.result-actions{grid-column:1 / -1;display:flex;gap:11px;flex-wrap:wrap}
+.actions{margin-top:6px}
+.result-actions{margin-top:28px}
+
+.btn{
+  padding:14px 26px;
+  border:1.5px solid var(--accent);border-radius:100px;
+  background:var(--accent);color:var(--on-accent);
+  font:inherit;font-size:15px;font-weight:600;
+  cursor:pointer;
+  box-shadow:var(--shadow-s);
+  transition:background-color .16s, transform .16s, border-color .16s;
+}
+.btn:hover{background:var(--accent-2);border-color:var(--accent-2)}
+.btn:active{transform:translateY(1px)}
+.btn.ghost{
+  background:transparent;color:var(--ink);border-color:var(--line);
+  box-shadow:none;font-weight:500;
+}
+.btn.ghost:hover{background:var(--surface);border-color:var(--ink-3)}
+.btn:disabled{opacity:.45;cursor:default}
+.btn:disabled:hover{background:transparent;border-color:var(--line)}
+
+/* ---------- строка контекста ---------- */
+.context{
+  margin:0 0 22px;font-size:15px;color:var(--ink-2);
+  font-variant-numeric:tabular-nums;max-width:60ch;
+}
+.context b{color:var(--ink);font-weight:600}
+.context .tag{
+  display:inline-block;background:var(--accent-soft);color:var(--accent);
+  border-radius:6px;padding:1px 7px;font-size:12.5px;font-weight:500;
+  margin-right:3px;
+}
+
+/* ---------- ритм урока ---------- */
+.rhythm{margin:0 0 30px;padding:0}
+#rhythm{width:100%;height:auto;display:block;max-width:660px}
+.rh-grid{stroke:var(--line);stroke-width:1}
+.rh-target{fill:none;stroke:var(--ink-3);stroke-width:1.6;stroke-dasharray:5 4;opacity:.8}
+.rh-ring{fill:none;stroke:var(--ink-3);stroke-width:1.4;stroke-dasharray:4 3;opacity:.8}
+.rh-line{fill:none;stroke:var(--warm);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.rh-dot{fill:var(--warm)}
+.rh-val{fill:#fff;font:600 12px var(--text)}
+.rh-ph{fill:var(--ink-2);font:500 12.5px var(--text)}
+.rh-ax{fill:var(--ink-3);font:11px var(--text)}
+.rhythm figcaption{margin-top:10px;font-size:13.5px;color:var(--ink-2);max-width:60ch}
+
+/* ---------- маршрут урока ---------- */
+.route{list-style:none;margin:0;padding:0 0 0 30px;position:relative;display:flex;flex-direction:column;gap:18px}
+.route::before{
+  content:"";position:absolute;left:8px;top:14px;bottom:14px;
+  width:2px;background:var(--line);border-radius:2px;
+}
+.route > li{position:relative}
+.route > li::before{
+  content:"";position:absolute;left:-27px;top:26px;
+  width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:2.5px solid var(--accent);
+}
+
+.card{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--r-m);
+  box-shadow:var(--shadow-s);
+  padding:22px 24px 24px;
+}
+@media (prefers-reduced-motion: no-preference){
+  .card{animation:rise .34s cubic-bezier(.22,.8,.3,1) both}
+  .route li:nth-child(2) .card{animation-delay:.06s}
+  .route li:nth-child(3) .card{animation-delay:.12s}
+}
+@keyframes rise{from{opacity:.001;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.phase{
+  font-size:11.5px;text-transform:uppercase;letter-spacing:.1em;
+  color:var(--accent);font-weight:600;
+}
+.energy-chip{
+  display:flex;align-items:center;gap:7px;
+  font-size:12px;color:var(--ink-2);font-variant-numeric:tabular-nums;
+  background:var(--warm-soft);border-radius:100px;padding:4px 11px;
+}
+.dots{display:flex;gap:3px}
+.dots i{width:6px;height:6px;border-radius:50%;background:var(--line);display:block}
+.dots i.on{background:var(--warm)}
+
+.card h3{
+  margin:10px 0 3px;
+  font-family:var(--display);font-weight:800;font-size:24px;letter-spacing:-.4px;
+  text-wrap:balance;
+}
+.goal{margin:0 0 14px;font-size:14px;color:var(--ink-3)}
+.card p.desc{margin:0 0 14px;font-size:15.5px;max-width:62ch}
+
+.how{
+  margin:0;padding:15px 17px;
+  background:var(--surface-2);border:1px solid var(--line-2);
+  border-radius:var(--r-s);
+  font-size:14.5px;max-width:64ch;
+}
+.how b{
+  display:block;margin-bottom:6px;font-weight:600;
+  font-size:11.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--ink-3);
+}
+
+.why{margin:15px 0 0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:7px}
+.why li{
+  font-size:12.5px;color:var(--ink-2);
+  background:var(--surface-2);border:1px solid var(--line-2);
+  border-radius:100px;padding:4px 12px;
+}
+.why li.link-note{background:var(--accent-soft);border-color:transparent;color:var(--accent)}
+.why li.warn{background:var(--warm-soft);border-color:transparent;color:var(--warm)}
+
+/* ---------- граф ---------- */
+.graph-box{margin-top:16px;overflow-x:auto}
+#graph{width:100%;min-width:610px;height:auto;display:block}
+.g-edge{stroke:var(--ink-3);stroke-width:1;opacity:.3}
+.g-edge.neg{stroke-dasharray:3 3}
+.g-path{stroke:var(--accent);stroke-width:2.6;fill:none;stroke-linejoin:round;stroke-linecap:round}
+.g-node{fill:var(--surface);stroke:var(--ink-3);stroke-width:1.4}
+.g-node.sel{fill:var(--accent);stroke:var(--accent)}
+.g-col{fill:var(--ink-3);font:600 11px var(--text);letter-spacing:.1em;text-transform:uppercase}
+.g-label{fill:var(--ink-2);font:11.5px var(--text)}
+.g-label.sel{fill:var(--ink);font-weight:600}
+
+/* ---------- методика ---------- */
+details summary{cursor:pointer;list-style:none;display:flex;align-items:center}
+details summary::-webkit-details-marker{display:none}
+details summary::after{
+  content:"";margin-left:auto;width:9px;height:9px;
+  border-right:2px solid var(--ink-3);border-bottom:2px solid var(--ink-3);
+  transform:rotate(45deg) translateY(-3px);transition:transform .2s;
+}
+details[open] summary::after{transform:rotate(-135deg) translateY(-3px)}
+.method-body{margin-top:20px;padding-top:4px;border-top:1px solid var(--line-2)}
+.method-body h3{
+  font-family:var(--display);font-size:16px;font-weight:700;margin:22px 0 5px;
+}
+.method-body h3:first-child{margin-top:16px}
+.method-body p{margin:0;font-size:14.5px;color:var(--ink-2);max-width:64ch}
+.method-body p.formula{
+  font-family:var(--mono);font-size:12.5px;line-height:1.65;
+  background:var(--surface);border:1px solid var(--line-2);
+  padding:13px 15px;border-radius:var(--r-s);margin:12px 0;color:var(--ink);
+  overflow-x:auto;max-width:100%;
+}
+
+/* ---------- подвал ---------- */
+.foot{
+  display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  margin-top:40px;padding-block:20px 48px;
+  border-top:1px solid var(--line);
+  font-size:12.5px;color:var(--ink-3);
+}
+
+/* ---------- адаптив ---------- */
+@media (max-width:640px){
+  .wrap{padding-inline:16px}
+  .grid{grid-template-columns:1fr}
+  .card-panel{padding:22px 20px 24px;border-radius:var(--r-m)}
+  .inset{padding:20px 18px 22px}
+  .tagline{margin-left:0}
+  .brand{font-size:24px}
+  .card h3{font-size:21px}
+  .route{padding-left:24px}
+  .route > li::before{left:-23px}
+  .btn{flex:1 1 auto;text-align:center}
+}
+
+/* ---------- печать ---------- */
+@media print{
+  .top,.foot,.actions,.result-actions,#form-panel,#method{display:none}
+  body{background:#fff;font-size:11.5pt}
+  .inset{background:#fff;border:none;padding:0}
+  .card{break-inside:avoid;box-shadow:none;animation:none}
+  .route::before{display:none}
+}
